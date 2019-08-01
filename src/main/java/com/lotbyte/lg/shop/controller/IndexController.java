@@ -8,7 +8,6 @@ public class IndexController  {
 
     @RequestMapping("index")
     public String index(){
-        System.out.println("主页面...123456");
         return "shop/index";
     }
 
