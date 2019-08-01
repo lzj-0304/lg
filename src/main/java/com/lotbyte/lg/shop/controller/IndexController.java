@@ -1,14 +1,14 @@
 package com.lotbyte.lg.shop.controller;
 
-import com.lotbyte.lg.shop.base.BaseController;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class IndexController  extends BaseController {
+public class IndexController  {
 
     @RequestMapping("index")
     public String index(){
+        System.out.println("主页面...123456");
         return "shop/index";
     }
 
