@@ -7,13 +7,13 @@
                     <span id="headerName" class="headerName">&nbsp;</span>
                 </li>
                 <li id="headerLogin" class="headerLogin">
-                    <a href="/shop/login.jhtml">登录</a>|
+                    <a href="/login">登录</a>|
                 </li>
                 <li id="headerRegister" class="headerRegister">
-                    <a href="/shop/register.jhtml">注册</a>
+                    <a href="/register">注册</a>
                 </li>
                 <li id="headerLogout" class="headerLogout">
-                    <a href="/shop/logout.jhtml">[退出]</a>
+                    <a href="/exit">[退出]</a>
                 </li>
             </ul>
             <ul class="right">
@@ -71,27 +71,14 @@
                     <dt>
                         <a href="/shop/product_category.jhtml">所有商品分类</a>
                     </dt>
-                    <dd>
-                        <a href="/shop/">首页</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/1.jhtml">手机数码</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/2.jhtml">电脑办公</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/3.jhtml">家用电器</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/4.jhtml">服装鞋靴</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/5.jhtml">化妆护理</a>
-                    </dd>
-                    <dd>
-                        <a href="/shop/goods/list/241.jhtml">积分商城</a>
-                    </dd>
+
+                    <@navigation_list position = 1>
+                        <#list navigations as navigation>
+                            <dd>
+                                <a href="${navigation.url}">${navigation.name}</a>
+                            </dd>
+                        </#list>
+                    </@navigation_list>
                 </dl>
             </div>
         </div>
