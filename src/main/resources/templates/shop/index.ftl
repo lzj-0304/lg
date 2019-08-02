@@ -1138,20 +1138,7 @@
             轮询图片
         -->
         <div class="span10">
-            <div id="slider" class="slider">
-                <a href="/shop/promotion/content/2.jhtml">
-                    <img src="http://image.demo.shopxx.net/4.0/201501/7a09df9e-3f64-4670-82c2-87f3fd0bec0b.jpg"
-                         alt="联想笔记本专场" title="联想笔记本专场"/>
-                </a>
-                <a href="#">
-                    <img src="http://image.demo.shopxx.net/4.0/201501/313597c4-10be-41a6-8827-9b75889ad88a.jpg"
-                         alt="苹果产品专场" title="苹果产品专场"/>
-                </a>
-                <a href="#">
-                    <img src="http://image.demo.shopxx.net/4.0/201501/f675047e-91ec-46ac-a718-6c003fc9b901.jpg"
-                         alt="情人节专场" title="情人节专场"/>
-                </a>
-            </div>
+            <@ad_position position =1  type =1 />
         </div>
     </div>
     <!--
@@ -1159,34 +1146,7 @@
     -->
     <div class="row">
         <div class="span9">
-            <div class="hotAd">
-                <ul>
-                    <li>
-                        <a href="#">
-                            <img src="http://image.demo.shopxx.net/4.0/201501/b31c243d-9f9e-4799-8f7e-b68803ce8a6a.jpg"
-                                 alt="华为荣耀" title="华为荣耀"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <img src="http://image.demo.shopxx.net/4.0/201501/9370250c-8b01-472e-8e68-13ab7d10ff7c.jpg"
-                                 alt="移动电源" title="移动电源"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <img src="http://image.demo.shopxx.net/4.0/201501/0b8d7827-ac10-4045-9840-432e7cf2254e.jpg"
-                                 alt="平板电脑" title="平板电脑"/>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <img src="http://image.demo.shopxx.net/4.0/201501/1a7358bc-bb8e-4c1a-af0d-8d651d24b61c.jpg"
-                                 alt="智能电视" title="智能电视"/>
-                        </a>
-                    </li>
-                </ul>
-            </div>
+            <@ad_position position =2  type =1 />
         </div>
         <div class="span3">
             <div id="newArticle" class="newArticle">

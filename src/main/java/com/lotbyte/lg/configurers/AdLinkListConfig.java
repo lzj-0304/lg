@@ -16,6 +16,6 @@ public class AdLinkListConfig {
     @PostConstruct
     public void setSharedVariable(){
         // 将标签注册到配置文件
-        configuration.setSharedVariable("ad_list", adListDirective);
+        configuration.setSharedVariable("ad_position", adListDirective);
     }
 }

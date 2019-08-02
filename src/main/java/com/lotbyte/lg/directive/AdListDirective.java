@@ -1,7 +1,9 @@
 package com.lotbyte.lg.directive;
 
+import com.lotbyte.lg.entity.XxAd;
 import com.lotbyte.lg.entity.XxAdPosition;
 import com.lotbyte.lg.service.XxAdPositionService;
+import com.lotbyte.lg.service.XxAdService;
 import freemarker.core.Environment;
 import freemarker.template.Template;
 import freemarker.template.TemplateDirectiveBody;
@@ -18,6 +20,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -34,19 +37,24 @@ public class AdListDirective extends BaseDirective {
     private XxAdPositionService adPositionService;
 
     @Resource
+    private XxAdService xxAdService;
+
+    @Resource
     private FreeMarkerConfigurer freeMarkerConfigurer;
 
     @Override
     public void execute(Environment environment, Map map, TemplateModel[] templateModels, TemplateDirectiveBody templateDirectiveBody) throws TemplateException, IOException {
         Integer position = Integer.parseInt(map.get("position").toString());
-        XxAdPosition adPosition = adPositionService.getById(position);
+        Integer type = Integer.parseInt(map.get("type").toString());
+        List<XxAd> list= xxAdService.queryAdListByType(type,position);
         if(null != templateDirectiveBody){
-            setLocalVariable(VARIABLE_NAME, adPosition, environment, templateDirectiveBody);
+            setLocalVariable(VARIABLE_NAME, list, environment, templateDirectiveBody);
         }else{
+            XxAdPosition adPosition = adPositionService.getById(position);
             // 执行模板输出
             if(null !=adPosition && StringUtils.isNotBlank(adPosition.getTemplate())){
                 Map<String, Object> model = new HashMap<String, Object>();
-                model.put(VARIABLE_NAME, adPosition);
+                model.put(VARIABLE_NAME, list);
                 Writer out = environment.getOut();
                 new Template("adTemplate", new StringReader(adPosition.getTemplate()), freeMarkerConfigurer.getConfiguration()).process(model, out);
             }
