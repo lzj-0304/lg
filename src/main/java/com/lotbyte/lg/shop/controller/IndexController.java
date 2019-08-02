@@ -20,4 +20,10 @@ public class IndexController  {
     public String register(){
         return "shop/register";
     }
+
+
+    @RequestMapping("find")
+    public String find(){
+        return "shop/find";
+    }
 }
