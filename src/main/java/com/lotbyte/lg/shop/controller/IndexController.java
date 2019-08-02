@@ -3,6 +3,8 @@ package com.lotbyte.lg.shop.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class IndexController  {
 
@@ -17,7 +19,9 @@ public class IndexController  {
     }
 
     @RequestMapping("register")
-    public String register(){
+    public String register(HttpServletRequest request){
+        request.getSession().setAttribute("ctx",request.getContextPath());
+
         return "shop/register";
     }
 }

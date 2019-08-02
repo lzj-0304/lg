@@ -43,7 +43,7 @@ public class CodeGenerator {
     // 作者
     private static final String AUTHOR = "lotbyte";
     // 生成的表名称
-    private static final String TABLE_NAME = "xx_member";
+    private static final String TABLE_NAME = "xx_ad";
     // 主键数据库列名称
     private static final String PK_ID_COLUMN_NAME = "id";
     // ############################ 配置部分 end ############################
@@ -62,7 +62,7 @@ public class CodeGenerator {
         /**
          * 这里修改为本地项目路径地址
          */
-        String projectPath ="C:/java/lotbyte/lg";
+        String projectPath ="D:/ideaworkspace/lg";
 
 
         gc.setOutputDir(projectPath + "/src/main/java");
