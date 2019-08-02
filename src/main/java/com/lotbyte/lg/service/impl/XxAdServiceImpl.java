@@ -1,9 +1,9 @@
 package com.lotbyte.lg.service.impl;
 
+import com.lotbyte.lg.common.service.impl.BaseServiceImpl;
 import com.lotbyte.lg.entity.XxAd;
 import com.lotbyte.lg.mapper.XxAdMapper;
 import com.lotbyte.lg.service.XxAdService;
-import com.lotbyte.lg.common.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
