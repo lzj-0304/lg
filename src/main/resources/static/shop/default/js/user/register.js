@@ -57,12 +57,12 @@ $().ready(function() {
     $.validator.addMethod("checkUsername",function(value,element,params){
         var check = /^\w{2,10}$/;
         return this.optional(element)||(check.test(value));
-    },"*请输入正确的用户名 (英文字母、数字和下画线，长度为2-10位)！");
+    },"*请输入正确的用户名！");
 
     $.validator.addMethod("checkPassword",function(value,element,params){
         var check = /^\w{6,16}$/;
         return this.optional(element)||(check.test(value));
-    },"*请输入正确的密码 (6-16位英文字母、数字和下画线)！");
+    },"*请输入正确的密码！");
 
     $.validator.addMethod("checkEmail",function(value,element,params){
         var check = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;

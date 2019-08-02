@@ -1,10 +1,13 @@
 package com.lotbyte.lg.shop.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.lotbyte.lg.common.web.controller.BaseController;
 import com.lotbyte.lg.sdk.GeetestConfig;
 import com.lotbyte.lg.sdk.GeetestLib;
+import com.lotbyte.lg.service.XxMemberService;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,9 +21,10 @@ import java.util.HashMap;
  */
 @Controller
 @RequestMapping("register")
-public class RegisterController {
+public class RegisterController extends BaseController{
 
-
+    @Autowired
+    private XxMemberService memberService;
 
     /**
      * 检查用户名是否被禁用或已存在
@@ -28,10 +32,8 @@ public class RegisterController {
     @RequestMapping(value = "/check_username")
     @ResponseBody
     public boolean checkUserName(String username) {
-        if (StringUtils.isEmpty(username)) {
-            return false;
-        }
-        return false;
+
+        return memberService.queryUserByName(username);
     }
 
     /**

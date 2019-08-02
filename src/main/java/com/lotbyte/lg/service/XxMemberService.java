@@ -13,4 +13,6 @@ import com.lotbyte.lg.common.service.BaseService;
  */
 public interface XxMemberService extends BaseService<XxMember> {
 
+    public Boolean queryUserByName(String username);
+
 }

@@ -37,6 +37,10 @@ public class CodeGenerator {
     private static final String PROJECT_PACKAGE_PATH = "com/lotbyte";
 
 
+
+
+
+
     // ############################ 配置部分 start ############################
     // 模块名称
     private static final String MODULE_NAME = "";
