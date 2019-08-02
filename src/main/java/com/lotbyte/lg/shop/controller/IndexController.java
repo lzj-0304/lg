@@ -24,4 +24,10 @@ public class IndexController  {
 
         return "shop/register";
     }
+
+
+    @RequestMapping("find")
+    public String find(){
+        return "shop/find";
+    }
 }
