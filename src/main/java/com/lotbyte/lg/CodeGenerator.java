@@ -43,7 +43,7 @@ public class CodeGenerator {
     // 作者
     private static final String AUTHOR = "lotbyte";
     // 生成的表名称
-    private static final String TABLE_NAME = "xx_member";
+    private static final String TABLE_NAME = "xx_navigation";
     // 主键数据库列名称
     private static final String PK_ID_COLUMN_NAME = "id";
     // ############################ 配置部分 end ############################
