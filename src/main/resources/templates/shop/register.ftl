@@ -8,9 +8,10 @@
 	<meta name="copyright" content="SHOP++" />
 	<link href="/shop/default/css/common.css" rel="stylesheet" type="text/css" />
 	<link href="/shop/default/css/register.css" rel="stylesheet" type="text/css" />
+    <link href="/shop/default/css/gt.css" rel="stylesheet" type="text/css" />
 	<script type="text/javascript" src="/shop/default/js/jquery.js"></script>
 	<script type="text/javascript" src="/shop/default/js/jquery.lSelect.js"></script>
-	<script type="text/javascript" src="/shop/default/js/jquery.validate.js"></script>
+	<script type="text/javascript" src="/shop/default/js/jquery.validate.min.js"></script>
 	<script type="text/javascript" src="/shop/default/js/jsbn.js"></script>
 	<script type="text/javascript" src="/shop/default/js/prng4.js"></script>
 	<script type="text/javascript" src="/shop/default/js/rng.js"></script>
@@ -18,175 +19,13 @@
 	<script type="text/javascript" src="/shop/default/js/base64.js"></script>
 	<script type="text/javascript" src="/shop/default/js/common.js"></script>
 	<script type="text/javascript" src="/shop/default/datePicker/WdatePicker.js"></script>
-	<script type="text/javascript">
-		$().ready(function() {
+    <!-- 注意，验证码本身是不需要 jquery 库，此处使用 jquery 仅为了在 demo 使用，减少代码量 -->
+    <!-- 引入 gt.js，既可以使用其中提供的 initGeetest 初始化函数 -->
+    <script type="text/javascript" src="/shop/default/js/gt.js"></script>
+    <script type="text/javascript" src="/shop/default/js/user/register.js"></script>
 
-			var $registerForm = $("#registerForm");
-			var $username = $("#username");
-			var $password = $("#password");
-			var $email = $("#email");
-			var $areaId = $("#areaId");
-			var $captcha = $("#captcha");
-			var $captchaImage = $("#captchaImage");
-			var $submit = $("input:submit");
-			var $agreement = $("#agreement");
-
-			// 地区选择
-			$areaId.lSelect({
-				url: "/shop/common/area.jhtml"
-			});
-
-			// 更换验证码
-			$captchaImage.click(function() {
-				$captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=af5e63b2-d5d5-4242-aa5d-de85b722a677&timestamp=" + new Date().getTime());
-			});
-
-			// 注册协议
-			$agreement.hover(function() {
-				$(this).height(200);
-			});
-
-			// 表单验证
-			$registerForm.validate({
-				rules: {
-					username: {
-						required: true,
-						pattern: /^[0-9a-zA-Z_\u4e00-\u9fa5]+$/,
-						minlength: 2,
-						remote: {
-							url: "/shop/register/check_username.jhtml",
-							cache: false
-						}
-					},
-					password: {
-						required: true,
-						minlength: 4
-					},
-					rePassword: {
-						required: true,
-						equalTo: "#password"
-					},
-					email: {
-						required: true,
-						email: true
-						,remote: {
-							url: "/shop/register/check_email.jhtml",
-							cache: false
-						}
-					},
-					captcha: "required"
-					,memberAttribute_7: {
-						pattern: /^\d{3,4}-?\d{7,9}$/
-					}
-					,memberAttribute_8: {
-						pattern: /^1[3|4|5|7|8]\d{9}$/
-					}
-				},
-				messages: {
-					username: {
-						pattern: "只允许包含中文、英文、数字、下划线",
-						remote: "用户名被禁用或已被注册"
-					}
-					,email: {
-						remote: "E-mail已被注册"
-					}
-				},
-				submitHandler: function(form) {
-					$.ajax({
-						url: "/shop/common/public_key.jhtml",
-						type: "GET",
-						dataType: "json",
-						cache: false,
-						beforeSend: function() {
-							$submit.prop("disabled", true);
-						},
-						success: function(data) {
-							var rsaKey = new RSAKey();
-							rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
-							var enPassword = hex2b64(rsaKey.encrypt($password.val()));
-							$.ajax({
-								url: $registerForm.attr("action"),
-								type: "POST",
-								data: {
-									username: $username.val(),
-									enPassword: enPassword,
-									email: $email.val()
-									,captchaId: "af5e63b2-d5d5-4242-aa5d-de85b722a677",
-									captcha: $captcha.val()
-									,memberAttribute_1: $(":input[name='memberAttribute_1']").val()
-									,memberAttribute_2: $(":input[name='memberAttribute_2']:checked").val()
-									,memberAttribute_7: $(":input[name='memberAttribute_7']").val()
-									,memberAttribute_8: $(":input[name='memberAttribute_8']").val()
-								},
-								dataType: "json",
-								cache: false,
-								success: function(message) {
-									$.message(message);
-									if (message.type == "success") {
-										setTimeout(function() {
-											$submit.prop("disabled", false);
-											location.href = "/shop/";
-										}, 3000);
-									} else {
-										$submit.prop("disabled", false);
-										$captcha.val("");
-										$captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=af5e63b2-d5d5-4242-aa5d-de85b722a677&timestamp=" + new Date().getTime());
-									}
-								}
-							});
-						}
-					});
-				}
-			});
-
-		});
-	</script>
 </head>
 <body>
-<script type="text/javascript">
-	$().ready(function() {
-
-		var $headerName = $("#headerName");
-		var $headerLogin = $("#headerLogin");
-		var $headerRegister = $("#headerRegister");
-		var $headerLogout = $("#headerLogout");
-		var $goodsSearchForm = $("#goodsSearchForm");
-		var $keyword = $("#goodsSearchForm input");
-		var defaultKeyword = "商品搜索";
-
-		var username = getCookie("username");
-		var nickname = getCookie("nickname");
-		if ($.trim(nickname) != "") {
-			$headerName.text(nickname).show();
-			$headerLogout.show();
-		} else if ($.trim(username) != "") {
-			$headerName.text(username).show();
-			$headerLogout.show();
-		} else {
-			$headerLogin.show();
-			$headerRegister.show();
-		}
-
-		$keyword.focus(function() {
-			if ($.trim($keyword.val()) == defaultKeyword) {
-				$keyword.val("");
-			}
-		});
-
-		$keyword.blur(function() {
-			if ($.trim($keyword.val()) == "") {
-				$keyword.val(defaultKeyword);
-			}
-		});
-
-		$goodsSearchForm.submit(function() {
-			if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
-				return false;
-			}
-		});
-
-	});
-</script>
 <div class="header">
 	<div class="top">
 		<div class="topNav">
@@ -293,7 +132,7 @@
 					<div class="title">
 						<strong>会员注册</strong>USER REGISTER
 					</div>
-					<form id="registerForm" action="/shop/register/submit.jhtml" method="post">
+					<form id="registerForm" action="/register/verifyLogin" method="post">
 						<table>
 							<tr>
 								<th>
@@ -340,14 +179,14 @@
 									性别:
 								</th>
 								<td>
-													<span class="fieldSet">
-															<label>
-																<input type="radio" name="memberAttribute_2" value="male" />男
-															</label>
-															<label>
-																<input type="radio" name="memberAttribute_2" value="female" />女
-															</label>
-													</span>
+										<span class="fieldSet">
+												<label>
+													<input type="radio" name="memberAttribute_2" value="male" />男
+												</label>
+												<label>
+													<input type="radio" name="memberAttribute_2" value="female" />女
+												</label>
+										</span>
 								</td>
 							</tr>
 							<tr>
@@ -371,14 +210,20 @@
 									<span class="requiredField">*</span>验证码:
 								</th>
 								<td>
+
 											<span class="fieldSet">
-												<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="/shop/common/captcha.jhtml?captchaId=af5e63b2-d5d5-4242-aa5d-de85b722a677" title="点击更换验证码" />
+												<div>
+													<div id="captcha1">
+														<span id="wait1" class="show">正在加载验证码......</span>
+													</div>
+												</div>
 											</span>
 								</td>
 							</tr>
 							<tr>
 								<th>
 									&nbsp;
+                                    <p id="notice1" class="hide">请先完成验证</p>
 								</th>
 								<td>
 									<input type="submit" class="submit" value="同意以下协议并注册" />
@@ -406,7 +251,7 @@
 								<dt>已经拥有账号了？</dt>
 								<dd>
 									立即登录即可体验在线购物！
-									<a href="/shop/login.jhtml">立即登录</a>
+									<a href="/login">立即登录</a>
 								</dd>
 							</dl>
 						</div>
