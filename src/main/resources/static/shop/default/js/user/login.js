@@ -36,7 +36,7 @@ $().ready(function() {
                 remote: "用户名不存在"
             }
         },
-        submitHandler: function(form) {
+        /*submitHandler: function(form) {
             $.ajax({
                 url: "/login/verifyLogin",
                 type: "GET",
@@ -60,11 +60,11 @@ $().ready(function() {
                 }
 
             });
-        },
+        },*/
         //提交表单后，（第一个）未通过验证的表单获得焦点
-        focusInvalid:true,
+        //focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
-        //focusCleanup:true
+        focusCleanup:true
     });
 
     //自定义正则表达示验证方法
@@ -84,7 +84,7 @@ var handler1 = function (captchaObj) {
             $("#notice1").show();
             setTimeout(function () {
                 $("#notice1").hide();
-            }, 100);
+            }, 2000);
             e.preventDefault();
         }
     });

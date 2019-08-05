@@ -3,11 +3,7 @@ $().ready(function() {
     var $registerForm = $("#registerForm");
     var $username = $("#username");
     var $password = $("#password");
-    var $email = $("#email");
-    var $captcha = $("#captcha");
-    var $captchaImage = $("#captchaImage");
     var $submit = $("input:submit");
-    var $agreement = $("#agreement");
 
 
     // 表单验证
@@ -40,8 +36,7 @@ $().ready(function() {
             memberAttribute_8: {
                 required: true,
                 checkPhone: true
-            },
-            captcha: "required",
+            }
 
         },
         messages: {
@@ -56,7 +51,7 @@ $().ready(function() {
         //提交表单后，（第一个）未通过验证的表单获得焦点
         focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
-        //focusCleanup:true
+        focusCleanup:true
     });
     //自定义正则表达示验证方法
     $.validator.addMethod("checkUsername",function(value,element,params){
@@ -90,7 +85,7 @@ var handler1 = function (captchaObj) {
             $("#notice1").show();
             setTimeout(function () {
                 $("#notice1").hide();
-            }, 1000);
+            }, 2000);
             e.preventDefault();
         }
     });

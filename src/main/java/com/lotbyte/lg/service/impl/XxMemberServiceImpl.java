@@ -256,7 +256,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
             if (gtResult == 1) {
                 // 验证成功
                 //调用登录方法
-                userlogin(request,response);
+                resultInfo = userlogin(request, response);
 
             } else {
                 // 验证失败
