@@ -37,6 +37,10 @@ $().ready(function() {
                     cache: false
                 }
             },
+            memberAttribute_8: {
+                required: true,
+                checkPhone: true
+            },
             captcha: "required",
 
         },
@@ -48,10 +52,11 @@ $().ready(function() {
                 remote: "E-mail已被注册"
             }
         },
+
         //提交表单后，（第一个）未通过验证的表单获得焦点
         focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
-        focusCleanup:true
+        //focusCleanup:true
     });
     //自定义正则表达示验证方法
     $.validator.addMethod("checkUsername",function(value,element,params){
@@ -68,6 +73,11 @@ $().ready(function() {
         var check = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         return this.optional(element)||(check.test(value));
     },"*请输入正确的邮箱！");
+
+    $.validator.addMethod("checkPhone",function(value,element,params){
+        var check = /^1[3456789]\d{9}$/;
+        return this.optional(element)||(check.test(value));
+    },"*请输入正确的手机号！");
 });
 
 
