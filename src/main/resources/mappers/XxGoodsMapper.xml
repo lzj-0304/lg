@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lotbyte.lg.mapper.XxGoodsMapper">
+
+    <select id="queryGoodsByTagAndProductCategoryId" resultType="com.lotbyte.lg.entity.XxGoods">
+            select g.*
+            FROM
+                xx_goods g,
+                xx_goods_tag t,
+                xx_product_category c
+            where g.id = t.goods and g.product_category=c.id
+            and t.tags=#{tag} and  FIND_IN_SET(#{productCategoryId},c.tree_path)
+            <if test="limit !=null">
+                limit #{limit}
+            </if>
+    </select>
+</mapper>

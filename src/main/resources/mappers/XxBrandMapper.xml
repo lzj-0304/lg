@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lotbyte.lg.mapper.XxBrandMapper">
+
+
+
+    <!--
+       根据商品分类id 查询品牌列表
+    -->
+    <select id="queryXxBrandsByProductCategoryId" resultType="com.lotbyte.lg.entity.XxBrand">
+        select b.*  from xx_brand b
+        left join xx_product_category_brand c on b.id=c.brands
+        <where>
+            <if test="productCategoryId !=null">
+                c.product_categories=#{productCategoryId}
+            </if>
+        </where>
+        <if test="limit !=null">
+            limit #{limit}
+        </if>
+    </select>
+</mapper>
