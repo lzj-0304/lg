@@ -1,0 +1,32 @@
+{
+	"contentManagement": [
+		{
+			"title": "系统管理",
+			"icon": "&#xe630;",
+			"href": "",
+			"spread": false,
+			"children": [
+				{
+					"title": "用户管理",
+					"icon": "&#xe61c;",
+					"href": "/user",
+					"spread": false
+				},
+				{
+					"title": "角色管理",
+					"icon": "&#xe609;",
+					"href": "/role",
+					"spread": false
+				},
+				{
+					"title": "资源管理",
+					"icon": "&#xe609;",
+					"href": "page/login/login.html",
+					"spread": false
+				}
+			]
+		}
+	]
+}
+
+
