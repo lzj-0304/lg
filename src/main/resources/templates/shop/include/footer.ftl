@@ -100,10 +100,9 @@
         </div>
 
 
-
         <div class="info">
-            <p>湘ICP备10000000号</p>
-            <p>Copyright © 2005-2015 SHOP++商城 版权所有</p>
+            <p>沪ICP备10000000号</p>
+            <p>Copyright © 2005-2020 乐购商城 版权所有</p>
             <ul>
                 <@friend_link_list type=1>
                     <#list friendLinkList as friendLink>
