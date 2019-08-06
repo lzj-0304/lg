@@ -100,7 +100,6 @@
         </div>
 
 
-
         <div class="info">
             <p>湘ICP备10000000号</p>
             <p>Copyright © 2005-2015 SHOP++商城 版权所有</p>
