@@ -1,0 +1,31 @@
+
+.btn-danger:hover {
+    color: #fff;
+    background-color: #c9302c;
+    border-color: #ac2925;}
+.btn-danger {
+    color: #fff;
+    background-color: #00ff00}
+.btn {
+    display: inline-block;
+    padding: 6px 12px;
+    background-color: #C9302C;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    background-image: none;
+    border: 1px solid transparent;
+    border-radius: 4px;}
+.btn:hover{
+    color: #333;
+    text-decoration: none;}

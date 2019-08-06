@@ -1,94 +1,66 @@
+
 //表单验证
 $().ready(function() {
-    var $registerForm = $("#registerForm");
-    var $username = $("#username");
-    var $password = $("#password");
-    var $rePassword = $("#rePassword");
-    var $email = $("#email");
-    var $xm = $("#memberAttribute_1");
-    var $phone = $("#memberAttribute_8");
+
+    var $passwordForm = $("#passwordForm");
+    var $phone = $("#phone");
+    var $dxyzm = $("#dxyzm");
+    var $newPassword = $("#newPassword");
+    var $newRePassword = $("#newRePassword");
     var $submit = $("input:submit");
 
-    //处理性别
-    var $xb;
-    var xb=$("input[name='memberAttribute_2']:checked").val();
-    if(xb=='female'){
-        $xb="女";
-    }else{
-        $xb="男";
-    }
-
     // 表单验证
-    $registerForm.validate({
+    $passwordForm.validate({
         rules: {
-            username: {
-                required: true,
-                checkUsername:true,
+            phone:{
+                required:true,
+                checkPhone:true,
                 remote: {
-                    url: "/register/check_username",
+                    url: "/register/find_CheckPhone",
                     cache: false
                 }
             },
-            password: {
+            dxyzm: {
                 required: true,
-                checkPassword: true
+                maxlength:6,
+                digits:true
             },
-            rePassword: {
+            newPassword: {
                 required: true,
-                equalTo: "#password"
+                checkPassword:true,
+
             },
-            email: {
+            newRePassword: {
                 required: true,
-                checkEmail: true,
-                remote: {
-                    url: "/register/check_email",
-                    cache: false
-                }
-            },
-            phone: {
-                required: true,
-                checkPhone: true,
-                remote: {
-                    url: "/register/check_phone",
-                    cache: false
-                }
+                equalTo: "#newPassword"
             },
 
+            captcha1: "required"
         },
         messages: {
-            username: {
-                remote: "用户名被禁用或已被注册"
-            },
-            email: {
-                remote: "E-mail已被注册"
-            },
             phone: {
-                remote: "手机号已被注册"
+                remote: "用户不存在"
             }
         },
         submitHandler: function(form) {
-
             //验证码数据
             var geetest_challenge=$('input[name="geetest_challenge"]').val();
             var geetest_validate=$('input[name="geetest_validate"]').val();
             var geetest_seccode=$('input[name="geetest_seccode"]').val();
 
             $.ajax({
-                url: "/register/verifyLogin",
-                type: "post",
-                dataType: "json",
-                data:{
-                    "username":$username.val(),
-                    "password":$password.val(),
-                    "rePassword":$rePassword.val(),
-                    "email":$email.val(),
-                    "memberAttribute_1":$xm.val(),
-                    "memberAttribute_2":$xb,
-                    "memberAttribute_8":$phone.val(),
+                url: "/register/findPassword",
+                type: "POST",
+                data: {
+                    "phone":$phone.val(),
+                    "dxyzm":$dxyzm.val(),
+                    "newPassword":$newPassword.val(),
+                    "newRePassword":$newRePassword.val(),
                     "geetest_challenge":geetest_challenge,
                     "geetest_validate":geetest_validate,
                     "geetest_seccode":geetest_seccode
                 },
+                dataType: "json",
                 cache: false,
                 beforeSend: function() {
                     $submit.prop("disabled", true);
@@ -96,44 +68,68 @@ $().ready(function() {
                 success: function(data) {
                     $submit.prop("disabled", false);
                     if (data.code == 200) {
-                        alert("注册成功")
+                        alert(data.msg);
                         location.href = "/login";
                     } else {
-                        $.message(data.msg);
+                        alert(data.msg);
                     }
                 }
-
             });
-
         },
 
         //提交表单后，（第一个）未通过验证的表单获得焦点
         focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
-        focusCleanup:true
+        //focusCleanup:true
     });
-    //自定义正则表达示验证方法
-    $.validator.addMethod("checkUsername",function(value,element,params){
-        var check = /^\w{2,10}$/;
+
+    $.validator.addMethod("checkPhone",function(value,element,params){
+        var check = /^1[3456789]\d{9}$/;
         return this.optional(element)||(check.test(value));
-    },"*请输入正确的用户名！");
+    },"*请输入正确的手机号！");
 
     $.validator.addMethod("checkPassword",function(value,element,params){
         var check = /^\w{6,16}$/;
         return this.optional(element)||(check.test(value));
     },"*请输入正确的密码！");
 
-    $.validator.addMethod("checkEmail",function(value,element,params){
-        var check = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
-        return this.optional(element)||(check.test(value));
-    },"*请输入正确的邮箱！");
 
-    $.validator.addMethod("checkPhone",function(value,element,params){
-        var check = /^1[3456789]\d{9}$/;
-        return this.optional(element)||(check.test(value));
-    },"*请输入正确的手机号！");
 });
 
+
+
+var wait=60;
+function getCode(o) {
+    var phone=$("#phone").val();
+    if(phone==undefined || phone=="" || phone==null){
+        alert("请先填写手机号");
+    }else {
+        if (wait == 0) {
+            o.removeAttribute("disabled");
+            o.value = "获取验证码";
+            wait = 60;
+        }
+        if(wait == 60){
+            $.ajax({
+                url: "/register/sendMsg",
+                type: "POST",
+                data: {
+                    "phone": phone,
+                },
+                dataType: "json",
+            })
+        }
+        if(wait!=0){
+            o.setAttribute("disabled", true);
+            o.value = "重新发送(" + wait + ")";
+            wait--;
+            setTimeout(function () {
+                    getCode(o)
+                },
+                1000)
+        }
+    }
+}
 
 
 /*极验行为验证*/
@@ -177,3 +173,46 @@ $.ajax({
 
 
 
+/*
+$().ready(function() {
+
+    var $headerName = $("#headerName");
+    var $headerLogin = $("#headerLogin");
+    var $headerRegister = $("#headerRegister");
+    var $headerLogout = $("#headerLogout");
+    var $goodsSearchForm = $("#goodsSearchForm");
+    var $keyword = $("#goodsSearchForm input");
+    var defaultKeyword = "商品搜索";
+
+    var username = getCookie("username");
+    var nickname = getCookie("nickname");
+    if ($.trim(nickname) != "") {
+        $headerName.text(nickname).show();
+        $headerLogout.show();
+    } else if ($.trim(username) != "") {
+        $headerName.text(username).show();
+        $headerLogout.show();
+    } else {
+        $headerLogin.show();
+        $headerRegister.show();
+    }
+
+    $keyword.focus(function() {
+        if ($.trim($keyword.val()) == defaultKeyword) {
+            $keyword.val("");
+        }
+    });
+
+    $keyword.blur(function() {
+        if ($.trim($keyword.val()) == "") {
+            $keyword.val(defaultKeyword);
+        }
+    });
+
+    $goodsSearchForm.submit(function() {
+        if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
+            return false;
+        }
+    });
+
+});*/

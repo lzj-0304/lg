@@ -35,13 +35,13 @@
 					<span id="headerName" class="headerName">&nbsp;</span>
 				</li>
 				<li id="headerLogin" class="headerLogin">
-					<a href="/shop/login.jhtml">登录</a>|
+					<a href="/login">登录</a>|
 				</li>
 				<li id="headerRegister" class="headerRegister">
-					<a href="/shop/register.jhtml">注册</a>
+					<a href="/register">注册</a>
 				</li>
 				<li id="headerLogout" class="headerLogout">
-					<a href="/shop/logout.jhtml">[退出]</a>
+					<a href="/login">[退出]</a>
 				</li>
 			</ul>
 			<ul class="right">
@@ -132,7 +132,7 @@
 					<div class="title">
 						<strong>会员注册</strong>USER REGISTER
 					</div>
-					<form id="registerForm" action="/register/verifyLogin" method="post">
+					<form id="registerForm" >
 						<table>
 							<tr>
 								<th>
@@ -155,7 +155,7 @@
 									<span class="requiredField">*</span>确认密码:
 								</th>
 								<td>
-									<input type="password" name="rePassword" class="text" maxlength="20" autocomplete="off" />
+									<input type="password" id="rePassword" name="rePassword" class="text" maxlength="20" autocomplete="off" />
 								</td>
 							</tr>
 							<tr>
@@ -171,7 +171,7 @@
 									姓名:
 								</th>
 								<td>
-									<input type="text" name="memberAttribute_1" class="text" maxlength="200" />
+									<input type="text" id="memberAttribute_1" name="memberAttribute_1" class="text" maxlength="200" />
 								</td>
 							</tr>
 							<tr>
@@ -194,7 +194,7 @@
                                     <span class="requiredField">*</span>手机:
 								</th>
 								<td>
-									<input type="text" name="memberAttribute_8" class="text" maxlength="200" />
+									<input type="text" id="memberAttribute_8" name="phone" class="text" maxlength="200" />
 								</td>
 							</tr>
 							<tr>

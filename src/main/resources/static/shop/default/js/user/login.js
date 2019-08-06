@@ -3,7 +3,7 @@ $().ready(function() {
     var $loginForm = $("#loginForm");
     var $username = $("#username");
     var $password = $("#password");
-    var $captcha = $("#captcha");
+    var $captcha = $("#captcha1");
     var $isRememberUsername = $("#isRememberUsername");
     var $submit = $("input:submit");
 
@@ -24,47 +24,61 @@ $().ready(function() {
                 required:true,
                 checkUsername:true,
                 remote: {
-                    url: "/login/check_username",
+                    url: "register/login/check_username",
                     cache: false
                 }
             },
             password: "required",
-            captcha: "required"
+            captcha1: "required"
         },
         messages: {
             username: {
-                remote: "用户名不存在"
+                remote: "用户不存在"
             }
         },
-        /*submitHandler: function(form) {
+        submitHandler: function(form) {
+            //验证码数据
+            var geetest_challenge=$('input[name="geetest_challenge"]').val();
+            var geetest_validate=$('input[name="geetest_validate"]').val();
+            var geetest_seccode=$('input[name="geetest_seccode"]').val();
+
             $.ajax({
-                url: "/login/verifyLogin",
-                type: "GET",
+                url: "register/login/verifyLogin",
+                type: "post",
                 dataType: "json",
+                data:{
+                    "username":$username.val(),
+                    "password":$password.val(),
+                    "geetest_challenge":geetest_challenge,
+                    "geetest_validate":geetest_validate,
+                    "geetest_seccode":geetest_seccode
+                },
                 cache: false,
                 beforeSend: function() {
                     $submit.prop("disabled", true);
                 },
                 success: function(data) {
-                        if ($isRememberUsername.prop("checked")) {
-                            addCookie("username", $username.val());
-                        } else {
-                            removeCookie("username");
-                        }
-                        $submit.prop("disabled", false);
-                        if (data.code == 200) {
-                            location.href = "/index";
-                        } else {
-                            $.message(data.msg);
-                        }
+                    if ($isRememberUsername.prop("checked")) {
+                        addCookie("username", $username.val());
+                    } else {
+                        removeCookie("username");
+                    }
+                    $submit.prop("disabled", false);
+                    if (data.code == 200) {
+                        alert("登录成功");
+                        location.href = "/index";
+                    } else {
+                        $.message(data.msg);
+                    }
                 }
 
             });
-        },*/
+
+        },
         //提交表单后，（第一个）未通过验证的表单获得焦点
-        //focusInvalid:true,
+        focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
-        focusCleanup:true
+        //focusCleanup:true
     });
 
     //自定义正则表达示验证方法
@@ -96,7 +110,7 @@ var handler1 = function (captchaObj) {
     // 更多接口参考：http://www.geetest.com/install/sections/idx-client-sdk.html
 };
 $.ajax({
-    url: "/login/gt/startCaptcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
+    url: "/register/gt/startCaptcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
     type: "get",
     dataType: "json",
     success: function (data) {

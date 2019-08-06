@@ -133,7 +133,7 @@
                     <div class="title">
                         <strong>会员登录</strong>USER LOGIN
                     </div>
-                    <form id="loginForm" action="/login/verifyLogin" method="post">
+                    <form id="loginForm" >
                         <table>
                             <tr>
                                 <th>
@@ -192,7 +192,7 @@
                                         <dt>还没有注册账号？</dt>
                                         <dd>
                                             立即注册即可体验在线购物！
-                                            <a href="/shop/register.jhtml">立即注册</a>
+                                            <a href="/register">立即注册</a>
                                         </dd>
                                     </dl>
                                 </td>

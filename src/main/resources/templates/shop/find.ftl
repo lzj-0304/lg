@@ -1,116 +1,23 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<title>找回密码 - Powered By SHOP++</title>
-<meta name="author" content="SHOP++ Team" />
-<meta name="copyright" content="SHOP++" />
-<link href="/shop/default/css/common.css" rel="stylesheet" type="text/css" />
-<link href="/shop/default/css/password.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="/shop/default/js/jquery.js"></script>
-<script type="text/javascript" src="/shop/default/js/jquery.validate.js"></script>
-<script type="text/javascript" src="/shop/default/js/common.js"></script>
-<script type="text/javascript">
-$().ready(function() {
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<title>找回密码 - Powered By SHOP++</title>
+	<meta name="author" content="SHOP++ Team" />
+	<meta name="copyright" content="SHOP++" />
+	<link href="/shop/default/css/common.css" rel="stylesheet" type="text/css" />
+	<link href="/shop/default/css/password.css" rel="stylesheet" type="text/css" />
+    <link href="/shop/default/css/find.css" rel="stylesheet" type="text/css" />
+	<link href="/shop/default/css/gt.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/shop/default/js/jquery.js"></script>
+	<script type="text/javascript" src="/shop/default/js/jquery.validate.min.js"></script>
+	<script type="text/javascript" src="/shop/default/js/common.js"></script>
 
-	var $passwordForm = $("#passwordForm");
-	var $username = $("#username");
-	var $email = $("#email");
-	var $captcha = $("#captcha");
-	var $captchaImage = $("#captchaImage");
-	var $submit = $("input:submit");
-	
-	// 更换验证码
-	$captchaImage.click(function() {
-		$captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=24f8e623-01d8-47fd-bf0c-42c698394ec3&timestamp=" + new Date().getTime());
-	});
-	
-	// 表单验证
-	$passwordForm.validate({
-		rules: {
-			username: "required",
-			email: {
-				required: true,
-				email: true
-			},
-			captcha: "required"
-		},
-		submitHandler: function(form) {
-			$.ajax({
-				url: $passwordForm.attr("action"),
-				type: "POST",
-				data: $passwordForm.serialize(),
-				dataType: "json",
-				cache: false,
-				beforeSend: function() {
-					$submit.prop("disabled", true);
-				},
-				success: function(message) {
-					$.message(message);
-					if (message.type == "success") {
-						setTimeout(function() {
-							$submit.prop("disabled", false);
-							location.href = "/shop/";
-						}, 3000);
-					} else {
-						$submit.prop("disabled", false);
-							$captcha.val("");
-							$captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=24f8e623-01d8-47fd-bf0c-42c698394ec3&timestamp=" + new Date().getTime());
-					}
-				}
-			});
-		}
-	});
-
-});
-</script>
+	<script type="text/javascript" src="/shop/default/js/gt.js"></script>
+	<script type="text/javascript" src="/shop/default/js/user/find.js"></script>
 </head>
 <body>
-<script type="text/javascript">
-$().ready(function() {
-
-	var $headerName = $("#headerName");
-	var $headerLogin = $("#headerLogin");
-	var $headerRegister = $("#headerRegister");
-	var $headerLogout = $("#headerLogout");
-	var $goodsSearchForm = $("#goodsSearchForm");
-	var $keyword = $("#goodsSearchForm input");
-	var defaultKeyword = "商品搜索";
-	
-	var username = getCookie("username");
-	var nickname = getCookie("nickname");
-	if ($.trim(nickname) != "") {
-		$headerName.text(nickname).show();
-		$headerLogout.show();
-	} else if ($.trim(username) != "") {
-		$headerName.text(username).show();
-		$headerLogout.show();
-	} else {
-		$headerLogin.show();
-		$headerRegister.show();
-	}
-	
-	$keyword.focus(function() {
-		if ($.trim($keyword.val()) == defaultKeyword) {
-			$keyword.val("");
-		}
-	});
-	
-	$keyword.blur(function() {
-		if ($.trim($keyword.val()) == "") {
-			$keyword.val(defaultKeyword);
-		}
-	});
-	
-	$goodsSearchForm.submit(function() {
-		if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
-			return false;
-		}
-	});
-
-});
-</script>
 <div class="header">
 	<div class="top">
 		<div class="topNav">
@@ -217,41 +124,60 @@ $().ready(function() {
 						<div class="title">
 							<strong>找回密码</strong>FORGOT PASSWORD
 						</div>
-						<form id="passwordForm" action="find.jhtml" method="post">
+						<form id="passwordForm">
 							<input type="hidden" name="captchaId" value="24f8e623-01d8-47fd-bf0c-42c698394ec3" />
 							<table>
 								<tr>
 									<th>
-										<span class="requiredField">*</span>用户名:
+										<span class="requiredField">*</span>手机号:
 									</th>
 									<td>
-										<input type="text" name="username" class="text" maxlength="200" />
+										<input type="text" id="phone" name="phone" class="text" maxlength="200" />
+
+                                        <input type="button" id="btn" onclick="getCode(this)" value="发送验证码" />
+                                    </td>
+								</tr>
+                                <tr>
+                                    <th>
+                                        <span class="requiredField">*</span>短信验证:
+                                    </th>
+                                    <td>
+                                        <input type="text" id="dxyzm" name="dxyzm" class="text" maxlength="200" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <span class="requiredField">*</span>重置密码:
+                                    </th>
+                                    <td>
+                                        <input type="password" id="newPassword" name="newPassword" class="text" maxlength="200" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        <span class="requiredField">*</span>确认重置密码:
+                                    </th>
+                                    <td>
+                                        <input type="password" id="newRePassword" name="newRePassword" class="text" maxlength="200" />
+                                    </td>
+                                </tr>
+								<tr>
+									<th>
+										<span class="requiredField">*</span>验证码:
+									</th>
+									<td>
+										<div id="captcha1">
+											<p id="wait1" class="show">正在加载验证码......</p>
+										</div>
 									</td>
 								</tr>
 								<tr>
-									<th>
-										<span class="requiredField">*</span>E-mail:
-									</th>
+                                    <th>
+                                        &nbsp;
+                                        <p id="notice1" class="hide">请先完成验证</p>
+                                    </th>
 									<td>
-										<input type="text" name="email" class="text" maxlength="200" />
-									</td>
-								</tr>
-									<tr>
-										<th>
-											<span class="requiredField">*</span>验证码:
-										</th>
-										<td>
-											<span class="fieldSet">
-												<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="/shop/common/captcha.jhtml?captchaId=24f8e623-01d8-47fd-bf0c-42c698394ec3" title="点击更换验证码" />
-											</span>
-										</td>
-									</tr>
-								<tr>
-									<th>
-										&nbsp;
-									</th>
-									<td>
-										<input type="submit" class="submit" value="提 交" />
+                                        <input type="submit" id="submit1" class="submit" value="登 录" />
 									</td>
 								</tr>
 							</table>
