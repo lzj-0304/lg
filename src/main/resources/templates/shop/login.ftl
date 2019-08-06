@@ -8,140 +8,22 @@
     <meta name="copyright" content="SHOP++" />
     <link href="/shop/default/css/common.css" rel="stylesheet" type="text/css" />
     <link href="/shop/default/css/login.css" rel="stylesheet" type="text/css" />
+    <link href="/shop/default/css/gt.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="/shop/default/js/jquery.js"></script>
-    <script type="text/javascript" src="/shop/default/js/jquery.validate.js"></script>
+    <script type="text/javascript" src="/shop/default/js/jquery.validate.min.js"></script>
     <script type="text/javascript" src="/shop/default/js/jsbn.js"></script>
     <script type="text/javascript" src="/shop/default/js/prng4.js"></script>
     <script type="text/javascript" src="/shop/default/js/rng.js"></script>
     <script type="text/javascript" src="/shop/default/js/rsa.js"></script>
     <script type="text/javascript" src="/shop/default/js/base64.js"></script>
     <script type="text/javascript" src="/shop/default/js/common.js"></script>
-    <script type="text/javascript">
-        $().ready(function() {
 
-            var $loginForm = $("#loginForm");
-            var $username = $("#username");
-            var $password = $("#password");
-            var $captcha = $("#captcha");
-            var $captchaImage = $("#captchaImage");
-            var $isRememberUsername = $("#isRememberUsername");
-            var $submit = $("input:submit");
+    <script type="text/javascript" src="/shop/default/js/gt.js"></script>
+    <script type="text/javascript" src="/shop/default/js/user/login.js"></script>
 
-            // 记住用户名
-            if (getCookie("memberUsername") != null) {
-                $isRememberUsername.prop("checked", true);
-                $username.val(getCookie("memberUsername"));
-                $password.focus();
-            } else {
-                $isRememberUsername.prop("checked", false);
-                $username.focus();
-            }
-
-            // 更换验证码
-            $captchaImage.click(function() {
-                $captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=3ab189d1-9999-42b3-9372-00c52f9f02d6&timestamp=" + new Date().getTime());
-            });
-
-            // 表单验证、记住用户名
-            $loginForm.validate({
-                rules: {
-                    username: "required",
-                    password: "required"
-                    ,captcha: "required"
-                },
-                submitHandler: function(form) {
-                    $.ajax({
-                        url: "/shop/common/public_key.jhtml",
-                        type: "GET",
-                        dataType: "json",
-                        cache: false,
-                        beforeSend: function() {
-                            $submit.prop("disabled", true);
-                        },
-                        success: function(data) {
-                            var rsaKey = new RSAKey();
-                            rsaKey.setPublic(b64tohex(data.modulus), b64tohex(data.exponent));
-                            var enPassword = hex2b64(rsaKey.encrypt($password.val()));
-                            $.ajax({
-                                url: $loginForm.attr("action"),
-                                type: "POST",
-                                data: {
-                                    username: $username.val(),
-                                    enPassword: enPassword
-                                    ,captchaId: "3ab189d1-9999-42b3-9372-00c52f9f02d6",
-                                    captcha: $captcha.val()
-                                },
-                                dataType: "json",
-                                cache: false,
-                                success: function(message) {
-                                    if ($isRememberUsername.prop("checked")) {
-                                        addCookie("memberUsername", $username.val(), {expires: 7 * 24 * 60 * 60});
-                                    } else {
-                                        removeCookie("memberUsername");
-                                    }
-                                    $submit.prop("disabled", false);
-                                    if (message.type == "success") {
-                                        location.href = "/shop/";
-                                    } else {
-                                        $.message(message);
-                                        $captcha.val("");
-                                        $captchaImage.attr("src", "/shop/common/captcha.jhtml?captchaId=3ab189d1-9999-42b3-9372-00c52f9f02d6&timestamp=" + new Date().getTime());
-                                    }
-                                }
-                            });
-                        }
-                    });
-                }
-            });
-
-        });
-    </script>
 </head>
 <body>
-<script type="text/javascript">
-    $().ready(function() {
 
-        var $headerName = $("#headerName");
-        var $headerLogin = $("#headerLogin");
-        var $headerRegister = $("#headerRegister");
-        var $headerLogout = $("#headerLogout");
-        var $goodsSearchForm = $("#goodsSearchForm");
-        var $keyword = $("#goodsSearchForm input");
-        var defaultKeyword = "商品搜索";
-
-        var username = getCookie("username");
-        var nickname = getCookie("nickname");
-        if ($.trim(nickname) != "") {
-            $headerName.text(nickname).show();
-            $headerLogout.show();
-        } else if ($.trim(username) != "") {
-            $headerName.text(username).show();
-            $headerLogout.show();
-        } else {
-            $headerLogin.show();
-            $headerRegister.show();
-        }
-
-        $keyword.focus(function() {
-            if ($.trim($keyword.val()) == defaultKeyword) {
-                $keyword.val("");
-            }
-        });
-
-        $keyword.blur(function() {
-            if ($.trim($keyword.val()) == "") {
-                $keyword.val(defaultKeyword);
-            }
-        });
-
-        $goodsSearchForm.submit(function() {
-            if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
-                return false;
-            }
-        });
-
-    });
-</script>
 <div class="header">
     <div class="top">
         <div class="topNav">
@@ -251,7 +133,7 @@
                     <div class="title">
                         <strong>会员登录</strong>USER LOGIN
                     </div>
-                    <form id="loginForm" action="/shop/login/submit.jhtml" method="post">
+                    <form id="loginForm" action="/login/verifyLogin" method="post">
                         <table>
                             <tr>
                                 <th>
@@ -274,30 +156,31 @@
                                     验证码:
                                 </th>
                                 <td>
-											<span class="fieldSet">
-												<input type="text" id="captcha" name="captcha" class="text captcha" maxlength="4" autocomplete="off" /><img id="captchaImage" class="captchaImage" src="/shop/common/captcha.jhtml?captchaId=3ab189d1-9999-42b3-9372-00c52f9f02d6" title="点击更换验证码" />
-											</span>
+                                    <div id="captcha1">
+                                        <p id="wait1" class="show">正在加载验证码......</p>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
                                 <th>
-                                    &nbsp;
+
                                 </th>
                                 <td>
                                     <label>
                                         <input type="checkbox" id="isRememberUsername" name="isRememberUsername" value="true" />记住用户名
                                     </label>
                                     <label>
-                                        &nbsp;&nbsp;<a href="/shop/password/find.jhtml">找回密码</a>
+                                        &nbsp;&nbsp;<a href="/find">找回密码</a>
                                     </label>
                                 </td>
                             </tr>
                             <tr>
                                 <th>
                                     &nbsp;
+                                    <p id="notice1" class="hide">请先完成验证</p>
                                 </th>
                                 <td>
-                                    <input type="submit" class="submit" value="登 录" />
+                                    <input type="submit" id="submit1" class="submit" value="登 录" />
                                 </td>
                             </tr>
                             <tr class="register">

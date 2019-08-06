@@ -3,11 +3,7 @@ $().ready(function() {
     var $registerForm = $("#registerForm");
     var $username = $("#username");
     var $password = $("#password");
-    var $email = $("#email");
-    var $captcha = $("#captcha");
-    var $captchaImage = $("#captchaImage");
     var $submit = $("input:submit");
-    var $agreement = $("#agreement");
 
 
     // 表单验证
@@ -37,7 +33,10 @@ $().ready(function() {
                     cache: false
                 }
             },
-            captcha: "required",
+            memberAttribute_8: {
+                required: true,
+                checkPhone: true
+            }
 
         },
         messages: {
@@ -48,6 +47,7 @@ $().ready(function() {
                 remote: "E-mail已被注册"
             }
         },
+
         //提交表单后，（第一个）未通过验证的表单获得焦点
         focusInvalid:true,
         //当未通过验证的元素获得焦点时，移除错误提示
@@ -57,17 +57,22 @@ $().ready(function() {
     $.validator.addMethod("checkUsername",function(value,element,params){
         var check = /^\w{2,10}$/;
         return this.optional(element)||(check.test(value));
-    },"*请输入正确的用户名 (英文字母、数字和下画线，长度为2-10位)！");
+    },"*请输入正确的用户名！");
 
     $.validator.addMethod("checkPassword",function(value,element,params){
         var check = /^\w{6,16}$/;
         return this.optional(element)||(check.test(value));
-    },"*请输入正确的密码 (6-16位英文字母、数字和下画线)！");
+    },"*请输入正确的密码！");
 
     $.validator.addMethod("checkEmail",function(value,element,params){
         var check = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
         return this.optional(element)||(check.test(value));
     },"*请输入正确的邮箱！");
+
+    $.validator.addMethod("checkPhone",function(value,element,params){
+        var check = /^1[3456789]\d{9}$/;
+        return this.optional(element)||(check.test(value));
+    },"*请输入正确的手机号！");
 });
 
 
@@ -80,7 +85,7 @@ var handler1 = function (captchaObj) {
             $("#notice1").show();
             setTimeout(function () {
                 $("#notice1").hide();
-            }, 1000);
+            }, 2000);
             e.preventDefault();
         }
     });

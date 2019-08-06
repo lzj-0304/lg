@@ -191,15 +191,7 @@
 							</tr>
 							<tr>
 								<th>
-									电话:
-								</th>
-								<td>
-									<input type="text" name="memberAttribute_7" class="text" maxlength="200" />
-								</td>
-							</tr>
-							<tr>
-								<th>
-									手机:
+                                    <span class="requiredField">*</span>手机:
 								</th>
 								<td>
 									<input type="text" name="memberAttribute_8" class="text" maxlength="200" />
@@ -210,14 +202,9 @@
 									<span class="requiredField">*</span>验证码:
 								</th>
 								<td>
-
-											<span class="fieldSet">
-												<div>
-													<div id="captcha1">
-														<span id="wait1" class="show">正在加载验证码......</span>
-													</div>
-												</div>
-											</span>
+                                    <div id="captcha1">
+                                        <p id="wait1" class="show">正在加载验证码......</p>
+                                    </div>
 								</td>
 							</tr>
 							<tr>
@@ -226,7 +213,7 @@
                                     <p id="notice1" class="hide">请先完成验证</p>
 								</th>
 								<td>
-									<input type="submit" class="submit" value="同意以下协议并注册" />
+									<input type="submit" id="submit1" class="submit" value="同意以下协议并注册" />
 								</td>
 							</tr>
 							<tr>
