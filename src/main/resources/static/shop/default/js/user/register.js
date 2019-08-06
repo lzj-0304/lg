@@ -99,7 +99,8 @@ $().ready(function() {
                         alert("注册成功")
                         location.href = "/login";
                     } else {
-                        $.message(data.msg);
+                        alert(data.msg);
+                        window.location.reload();
                     }
                 }
 

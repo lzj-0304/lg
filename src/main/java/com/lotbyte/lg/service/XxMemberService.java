@@ -35,9 +35,9 @@ public interface XxMemberService extends BaseService<XxMember> {
     public ResultInfo loginVerifyLogin(HttpServletRequest request, HttpServletResponse response);
 
     //找回密码
-    ResultInfo findPassword(HttpServletRequest request, HttpServletResponse response);
+    public ResultInfo findPassword(HttpServletRequest request, HttpServletResponse response);
     //发送短信验证码
-    ResultInfo sendMsg(HttpServletRequest httpServletRequest,String phoneNum);
+    public ResultInfo sendMsg(HttpServletRequest httpServletRequest,String phoneNum);
     //根据phone查找用户是否存在
     public Boolean findCountUserByPhone(String phone);
 }

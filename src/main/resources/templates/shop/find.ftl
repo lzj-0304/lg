@@ -84,7 +84,7 @@
                                         <p id="notice1" class="hide">请先完成验证</p>
                                     </th>
 									<td>
-                                        <input type="submit" id="submit1" class="submit" value="登 录" />
+                                        <input type="submit" id="submit1" class="submit" value="确 认" />
 									</td>
 								</tr>
 							</table>

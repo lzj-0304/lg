@@ -1,6 +1,5 @@
-
 //表单验证
-$().ready(function() {
+$().ready(function () {
 
     var $passwordForm = $("#passwordForm");
     var $phone = $("#phone");
@@ -12,9 +11,9 @@ $().ready(function() {
     // 表单验证
     $passwordForm.validate({
         rules: {
-            phone:{
-                required:true,
-                checkPhone:true,
+            phone: {
+                required: true,
+                checkPhone: true,
                 remote: {
                     url: "/register/find_CheckPhone",
                     cache: false
@@ -22,12 +21,11 @@ $().ready(function() {
             },
             dxyzm: {
                 required: true,
-                maxlength:6,
-                digits:true
+                digits: true
             },
             newPassword: {
                 required: true,
-                checkPassword:true,
+                checkPassword: true,
 
             },
             newRePassword: {
@@ -42,74 +40,75 @@ $().ready(function() {
                 remote: "用户不存在"
             }
         },
-        submitHandler: function(form) {
+        submitHandler: function (form) {
             //验证码数据
-            var geetest_challenge=$('input[name="geetest_challenge"]').val();
-            var geetest_validate=$('input[name="geetest_validate"]').val();
-            var geetest_seccode=$('input[name="geetest_seccode"]').val();
+            var geetest_challenge = $('input[name="geetest_challenge"]').val();
+            var geetest_validate = $('input[name="geetest_validate"]').val();
+            var geetest_seccode = $('input[name="geetest_seccode"]').val();
 
             $.ajax({
                 url: "/register/findPassword",
                 type: "POST",
                 data: {
-                    "phone":$phone.val(),
-                    "dxyzm":$dxyzm.val(),
-                    "newPassword":$newPassword.val(),
-                    "newRePassword":$newRePassword.val(),
-                    "geetest_challenge":geetest_challenge,
-                    "geetest_validate":geetest_validate,
-                    "geetest_seccode":geetest_seccode
+                    "phone": $phone.val(),
+                    "dxyzm": $dxyzm.val(),
+                    "newPassword": $newPassword.val(),
+                    "newRePassword": $newRePassword.val(),
+                    "geetest_challenge": geetest_challenge,
+                    "geetest_validate": geetest_validate,
+                    "geetest_seccode": geetest_seccode
                 },
                 dataType: "json",
                 cache: false,
-                beforeSend: function() {
+                beforeSend: function () {
                     $submit.prop("disabled", true);
                 },
-                success: function(data) {
+                success: function (data) {
                     $submit.prop("disabled", false);
                     if (data.code == 200) {
                         alert(data.msg);
                         location.href = "/login";
                     } else {
                         alert(data.msg);
+                        window.location.reload();
                     }
                 }
             });
         },
 
         //提交表单后，（第一个）未通过验证的表单获得焦点
-        focusInvalid:true,
+        focusInvalid: true,
         //当未通过验证的元素获得焦点时，移除错误提示
         //focusCleanup:true
     });
 
-    $.validator.addMethod("checkPhone",function(value,element,params){
+    $.validator.addMethod("checkPhone", function (value, element, params) {
         var check = /^1[3456789]\d{9}$/;
-        return this.optional(element)||(check.test(value));
-    },"*请输入正确的手机号！");
+        return this.optional(element) || (check.test(value));
+    }, "*请输入正确的手机号！");
 
-    $.validator.addMethod("checkPassword",function(value,element,params){
+    $.validator.addMethod("checkPassword", function (value, element, params) {
         var check = /^\w{6,16}$/;
-        return this.optional(element)||(check.test(value));
-    },"*请输入正确的密码！");
+        return this.optional(element) || (check.test(value));
+    }, "*请输入正确的密码！");
 
 
 });
 
 
-
-var wait=60;
+var wait = 60;
 function getCode(o) {
-    var phone=$("#phone").val();
-    if(phone==undefined || phone=="" || phone==null){
+    var phone = $("#phone").val();
+    if (phone == undefined || phone == "" || phone == null) {
         alert("请先填写手机号");
-    }else {
+    } else {
+        wait--;
         if (wait == 0) {
             o.removeAttribute("disabled");
             o.value = "获取验证码";
             wait = 60;
         }
-        if(wait == 60){
+        if (wait == 59) {
             $.ajax({
                 url: "/register/sendMsg",
                 type: "POST",
@@ -119,10 +118,9 @@ function getCode(o) {
                 dataType: "json",
             })
         }
-        if(wait!=0){
+        if (wait < 60) {
             o.setAttribute("disabled", true);
             o.value = "重新发送(" + wait + ")";
-            wait--;
             setTimeout(function () {
                     getCode(o)
                 },
@@ -172,47 +170,46 @@ $.ajax({
 });
 
 
-
 /*
-$().ready(function() {
+ $().ready(function() {
 
-    var $headerName = $("#headerName");
-    var $headerLogin = $("#headerLogin");
-    var $headerRegister = $("#headerRegister");
-    var $headerLogout = $("#headerLogout");
-    var $goodsSearchForm = $("#goodsSearchForm");
-    var $keyword = $("#goodsSearchForm input");
-    var defaultKeyword = "商品搜索";
+ var $headerName = $("#headerName");
+ var $headerLogin = $("#headerLogin");
+ var $headerRegister = $("#headerRegister");
+ var $headerLogout = $("#headerLogout");
+ var $goodsSearchForm = $("#goodsSearchForm");
+ var $keyword = $("#goodsSearchForm input");
+ var defaultKeyword = "商品搜索";
 
-    var username = getCookie("username");
-    var nickname = getCookie("nickname");
-    if ($.trim(nickname) != "") {
-        $headerName.text(nickname).show();
-        $headerLogout.show();
-    } else if ($.trim(username) != "") {
-        $headerName.text(username).show();
-        $headerLogout.show();
-    } else {
-        $headerLogin.show();
-        $headerRegister.show();
-    }
+ var username = getCookie("username");
+ var nickname = getCookie("nickname");
+ if ($.trim(nickname) != "") {
+ $headerName.text(nickname).show();
+ $headerLogout.show();
+ } else if ($.trim(username) != "") {
+ $headerName.text(username).show();
+ $headerLogout.show();
+ } else {
+ $headerLogin.show();
+ $headerRegister.show();
+ }
 
-    $keyword.focus(function() {
-        if ($.trim($keyword.val()) == defaultKeyword) {
-            $keyword.val("");
-        }
-    });
+ $keyword.focus(function() {
+ if ($.trim($keyword.val()) == defaultKeyword) {
+ $keyword.val("");
+ }
+ });
 
-    $keyword.blur(function() {
-        if ($.trim($keyword.val()) == "") {
-            $keyword.val(defaultKeyword);
-        }
-    });
+ $keyword.blur(function() {
+ if ($.trim($keyword.val()) == "") {
+ $keyword.val(defaultKeyword);
+ }
+ });
 
-    $goodsSearchForm.submit(function() {
-        if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
-            return false;
-        }
-    });
+ $goodsSearchForm.submit(function() {
+ if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
+ return false;
+ }
+ });
 
-});*/
+ });*/

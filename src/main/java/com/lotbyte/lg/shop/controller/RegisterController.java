@@ -75,6 +75,14 @@ public class RegisterController{
     }
 
 
+    @RequestMapping("/login/verifyLogin")
+    @ResponseBody
+    public ResultInfo loginVerifyLogin(HttpServletRequest request, HttpServletResponse response) throws Exception{
+
+        return memberService.loginVerifyLogin(request,response);
+    }
+
+
     /**
      * 使用Get的方式返回challenge和capthca_id,此方式以实现前后端完全分离的开发模式
      */
@@ -93,6 +101,7 @@ public class RegisterController{
 
         return memberService.verifyLogin(request,response);
     }
+
 
 
     //找回密码

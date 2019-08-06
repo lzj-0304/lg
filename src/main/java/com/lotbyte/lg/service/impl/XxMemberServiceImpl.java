@@ -270,10 +270,6 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
             String validate = request.getParameter(GeetestLib.fn_geetest_validate);
             String seccode = request.getParameter(GeetestLib.fn_geetest_seccode);
 
-            log.info(challenge);
-            log.info(validate);
-            log.info(seccode);
-
             //从session中获取gt-server状态
             int gt_server_status_code = (Integer) request.getSession().getAttribute(gtSdk.gtServerStatusSessionKey);
 
@@ -362,7 +358,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
             if (gtResult == 1) {
                 // 验证成功
                 //调用修改密码
-                updatePassword(request,response);
+                resultInfo = updatePassword(request, response);
             } else {
                 // 验证失败
                 resultInfo = new ResultInfo();
@@ -387,8 +383,8 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
         //获取前台传来的参数
         String phoneNum = request.getParameter("phone");
         String dxyzm = request.getParameter("dxyzm");
-        String newPassword = request.getParameter("newpassword");
-        String newRepassword = request.getParameter("newRepassword");
+        String newPassword = request.getParameter("newPassword");
+        String newRepassword = request.getParameter("newRePassword");
 
         AssertUtil.isTrue(StringUtils.isEmpty(phoneNum) || "".equals(phoneNum),"手机号为空");
         AssertUtil.isTrue(StringUtils.isEmpty(dxyzm) || "".equals(dxyzm),"短信验证码为空");
@@ -460,10 +456,15 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
         try {
             //自动生成6位数验证码c
             String smsCode = String.valueOf(new Random().nextInt(899999) + 100000);
-            httpServletRequest.getSession().setAttribute("phoneNum",smsCode);
+            httpServletRequest.getSession().setAttribute(phoneNum,smsCode);
             //设置当前存放时间，以便在找回时判定是否过期
             long time = new Date().getTime();
             httpServletRequest.getSession().setAttribute(smsCode,time);
+
+            String attribute1 = (String) httpServletRequest.getSession().getAttribute(phoneNum);
+            Long attribute2 = (Long) httpServletRequest.getSession().getAttribute(attribute1);
+            log.info(attribute1);
+            log.info(attribute2+"");
 
             //调用阿里通信接口
             //设置超时时间-可自行调整

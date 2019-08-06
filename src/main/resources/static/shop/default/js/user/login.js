@@ -68,7 +68,8 @@ $().ready(function() {
                         alert("登录成功");
                         location.href = "/index";
                     } else {
-                        $.message(data.msg);
+                        alert(data.msg);
+                        window.location.reload();
                     }
                 }
 
