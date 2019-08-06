@@ -1,9 +1,9 @@
 <html class="loginHtml">
 <head>
 	<link rel="icon" href="${ctx}/favicon.ico">
-	<link rel="stylesheet" href="${ctx}/static/layui/css/layui.css" media="all" />
-	<link rel="stylesheet" href="${ctx}/static/css/public.css" media="all" />
-	<title>登录--layui后台管理模板 2.0</title>
+	<link rel="stylesheet" href="${ctx}/admin/layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="${ctx}/admin/css/public.css" media="all" />
+	<title>登录</title>
 </head>
 <body class="loginBody ">
 <div class="layui-form" >
@@ -95,7 +95,7 @@
 		});
 	};
 	$.ajax({
-		url: "/register?t=" + (new Date()).getTime(), // 加随机数防止缓存
+		url: "/admin/register?t=" + (new Date()).getTime(), // 加随机数防止缓存
 		type: "get",
 		dataType: "json",
 		success: function (data) {
