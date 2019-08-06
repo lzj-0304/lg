@@ -3,7 +3,7 @@
         <div class="topNav">
             <ul class="left">
                 <li>
-                    <span>您好，欢迎来到SHOP++商城</span>
+                    <span>您好，欢迎来到乐购商城</span>
                     <span id="headerName" class="headerName">&nbsp;</span>
                 </li>
                 <li id="headerLogin" class="headerLogin">
@@ -34,7 +34,7 @@
         <div class="row">
             <div class="span3">
                 <a href="/shop/">
-                    <img src="/shop/upload/image/logo.gif" alt="SHOP++商城"/>
+                    <img src="/shop/default/images/logo.png" alt="SHOP++商城"/>
                 </a>
             </div>
             <div class="span6">
