@@ -41,22 +41,15 @@ $().ready(function () {
             }
         },
         submitHandler: function (form) {
-            //验证码数据
-            var geetest_challenge = $('input[name="geetest_challenge"]').val();
-            var geetest_validate = $('input[name="geetest_validate"]').val();
-            var geetest_seccode = $('input[name="geetest_seccode"]').val();
 
             $.ajax({
-                url: "/register/findPassword",
+                url: "/register/updatePassword",
                 type: "POST",
                 data: {
                     "phone": $phone.val(),
                     "dxyzm": $dxyzm.val(),
                     "newPassword": $newPassword.val(),
                     "newRePassword": $newRePassword.val(),
-                    "geetest_challenge": geetest_challenge,
-                    "geetest_validate": geetest_validate,
-                    "geetest_seccode": geetest_seccode
                 },
                 dataType: "json",
                 cache: false,
@@ -93,123 +86,123 @@ $().ready(function () {
     }, "*请输入正确的密码！");
 
 
+    //初始化极验验证
+    $.ajax({
+        url: "/register/gt/startCaptcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
+        type: "get",
+        dataType: "json",
+        success: function (data) {
+            // 调用 initGeetest 初始化参数
+            // 参数1：配置参数
+            // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它调用相应的接口
+            initGeetest({
+                gt: data.gt,
+                challenge: data.challenge,
+                new_captcha: data.new_captcha, // 用于宕机时表示是新验证码的宕机
+                offline: !data.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
+                product: "float", // 产品形式，包括：float，popup
+                width: "100%"
+                // 更多配置参数请参见：http://www.geetest.com/install/sections/idx-client-sdk.html#config
+            }, handler1);
+        }
+    });
 });
-
-
-var wait = 60;
-function getCode(o) {
-    var phone = $("#phone").val();
-    if (phone == undefined || phone == "" || phone == null) {
-        alert("请先填写手机号");
-    } else {
-        wait--;
-        if (wait == 0) {
-            o.removeAttribute("disabled");
-            o.value = "获取验证码";
-            wait = 60;
-        }
-        if (wait == 59) {
-            $.ajax({
-                url: "/register/sendMsg",
-                type: "POST",
-                data: {
-                    "phone": phone,
-                },
-                dataType: "json",
-            })
-        }
-        if (wait < 60) {
-            o.setAttribute("disabled", true);
-            o.value = "重新发送(" + wait + ")";
-            setTimeout(function () {
-                    getCode(o)
-                },
-                1000)
-        }
-    }
-}
-
 
 /*极验行为验证*/
 var handler1 = function (captchaObj) {
-    $("#submit1").click(function (e) {
+    $("#btn").click(function (e) {
+        //查看极验验证的状态
         var result = captchaObj.getValidate();
-        if (!result) {
-            $("#notice1").show();
-            setTimeout(function () {
-                $("#notice1").hide();
-            }, 2000);
-            e.preventDefault();
+        var phone = $("#phone").val();
+        if (phone == undefined || phone == "" || phone == null) {
+            alert("请先填写手机号");
+            return;
+        }else {
+            //判断验证是否通过
+            if((!result) ){
+                $("#notice1").show();
+                setTimeout(function () {
+                    $("#notice1").hide();
+                }, 2000);
+                e.preventDefault();
+
+                return;
+            }
         }
+        //校验极验验证
+        getCode(this);
     });
     // 将验证码加到id为captcha的元素里，同时会有三个input的值用于表单提交
     captchaObj.appendTo("#captcha1");
     captchaObj.onReady(function () {
         $("#wait1").hide();
     });
-    // 更多接口参考：http://www.geetest.com/install/sections/idx-client-sdk.html
 };
-$.ajax({
-    url: "/register/gt/startCaptcha?t=" + (new Date()).getTime(), // 加随机数防止缓存
-    type: "get",
-    dataType: "json",
-    success: function (data) {
-        // 调用 initGeetest 初始化参数
-        // 参数1：配置参数
-        // 参数2：回调，回调的第一个参数验证码对象，之后可以使用它调用相应的接口
-        initGeetest({
-            gt: data.gt,
-            challenge: data.challenge,
-            new_captcha: data.new_captcha, // 用于宕机时表示是新验证码的宕机
-            offline: !data.success, // 表示用户后台检测极验服务器是否宕机，一般不需要关注
-            product: "float", // 产品形式，包括：float，popup
-            width: "100%"
-            // 更多配置参数请参见：http://www.geetest.com/install/sections/idx-client-sdk.html#config
-        }, handler1);
+
+
+//发送验证码按钮
+var wait = 60;
+function getCode(o) {
+    wait--;
+    if (wait == 0) {
+        o.removeAttribute("disabled");
+        o.value = "获取验证码";
+        wait = 60;
     }
-});
+    if (wait == 59) {
+        //ajax请求校验验证码/发送短信
+        checkJy();
+    }
+    if (wait < 60) {
+        o.setAttribute("disabled", true);
+        o.value = "重新发送(" + wait + ")";
+        setTimeout(function () {
+                getCode(o)
+            },
+            1000)
+    }
+
+}
 
 
-/*
- $().ready(function() {
+//校验验证后发送短信
+function checkJy() {
+    //验证码数据
+    var geetest_challenge = $('input[name="geetest_challenge"]').val();
+    var geetest_validate = $('input[name="geetest_validate"]').val();
+    var geetest_seccode = $('input[name="geetest_seccode"]').val();
 
- var $headerName = $("#headerName");
- var $headerLogin = $("#headerLogin");
- var $headerRegister = $("#headerRegister");
- var $headerLogout = $("#headerLogout");
- var $goodsSearchForm = $("#goodsSearchForm");
- var $keyword = $("#goodsSearchForm input");
- var defaultKeyword = "商品搜索";
+    $.ajax({
+        url: "/register/check_JY",
+        type: "POST",
+        data: {
+            "geetest_challenge": geetest_challenge,
+            "geetest_validate": geetest_validate,
+            "geetest_seccode": geetest_seccode
+        },
+        dataType: "json",
+        success:function (data) {
+            if(data.code==200){
+                //如果校验成功，发送短信
+                sendMsg();
+            }else{
+                alert(data.msg);
+            }
+        }
+    })
+}
 
- var username = getCookie("username");
- var nickname = getCookie("nickname");
- if ($.trim(nickname) != "") {
- $headerName.text(nickname).show();
- $headerLogout.show();
- } else if ($.trim(username) != "") {
- $headerName.text(username).show();
- $headerLogout.show();
- } else {
- $headerLogin.show();
- $headerRegister.show();
- }
 
- $keyword.focus(function() {
- if ($.trim($keyword.val()) == defaultKeyword) {
- $keyword.val("");
- }
- });
+function sendMsg() {
+    var phone = $("#phone").val();
+    $.ajax({
+        url: "/register/sendMsg",
+        type: "POST",
+        data: {
+            "phone":phone
+        },
+        dataType: "json"
 
- $keyword.blur(function() {
- if ($.trim($keyword.val()) == "") {
- $keyword.val(defaultKeyword);
- }
- });
+    })
+}
 
- $goodsSearchForm.submit(function() {
- if ($.trim($keyword.val()) == "" || $keyword.val() == defaultKeyword) {
- return false;
- }
- });
-
- });*/

@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,32 +25,11 @@ public class RegisterController{
     /**
      * 检查用户名是否被禁用或已存在
      */
-    @RequestMapping(value = "/check_username")
+    @RequestMapping("/check")
     @ResponseBody
-    public boolean checkUserName(String username) {
+    public Boolean checkUserRegister(HttpServletRequest request) {
 
-        return memberService.countUserByName(username);
-    }
-
-    /**
-     * 检查email是否存在
-     */
-    @RequestMapping(value = "/check_email")
-    @ResponseBody
-    public boolean checkEmail(String email) {
-
-        return memberService.countUserByemail(email);
-    }
-
-
-    /**
-     * 检查手机号是否存在
-     */
-    @RequestMapping(value = "/check_phone")
-    @ResponseBody
-    public boolean checkPhone(@RequestParam(name = "phone") String phone) {
-        log.info("检查手机号");
-        return memberService.countUserByPhone(phone);
+        return memberService.checkUserRegister(request);
     }
 
 
@@ -107,29 +85,47 @@ public class RegisterController{
     //找回密码
 
     /**
+     * 校验短信码，修改密码
+     * @param
+     * @return
+     */
+    @RequestMapping("/updatePassword")
+    @ResponseBody
+    public ResultInfo updatePassword(HttpServletRequest request, HttpServletResponse response) {
+        return memberService.updatePassword(request,response);
+    }
+
+    /**
      * 发送短信验证码
      * @param phone
+     * @param
      * @return
      */
     @RequestMapping("/sendMsg")
     @ResponseBody
-    public ResultInfo sendMsg(HttpServletRequest httpServletRequest,String phone) {
-        return memberService.sendMsg(httpServletRequest,phone);
+    public ResultInfo sendMsg(HttpServletRequest request, String phone) {
+        return memberService.sendMsg(request,phone);
     }
+
 
     /**
-     * 校验短信码，修改密码
-     * @param request
-     * @param response
+     * 发送短信验证码
+     * @param
+     * @param
      * @return
      */
-    @RequestMapping("/findPassword")
+    @RequestMapping("/check_JY")
     @ResponseBody
-    public ResultInfo findPassword(HttpServletRequest request, HttpServletResponse response) {
-        return memberService.findPassword(request,response);
+    public ResultInfo checkJY(HttpServletRequest request, HttpServletResponse response) {
+        return memberService.checkJY(request,response);
     }
 
 
+    /**
+     * 找回密码（手机号判断用户是否存在）
+     * @param phone
+     * @return
+     */
     @RequestMapping("/find_CheckPhone")
     @ResponseBody
     public Boolean findCheckPhone(String phone) {

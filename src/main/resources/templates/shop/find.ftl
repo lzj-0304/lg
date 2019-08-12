@@ -40,16 +40,26 @@
 									</th>
 									<td>
 										<input type="text" id="phone" name="phone" class="text" maxlength="200" />
-
-                                        <input type="button" id="btn" onclick="getCode(this)" value="发送验证码" />
                                     </td>
 								</tr>
+                                <tr>
+                                    <th>
+                                        <span class="requiredField">*</span>验证码:
+                                    </th>
+                                    <td>
+                                        <div id="captcha1">
+                                            <p id="wait1" class="show">正在加载验证码......</p>
+                                        </div>
+                                    </td>
+                                </tr>
                                 <tr>
                                     <th>
                                         <span class="requiredField">*</span>短信验证:
                                     </th>
                                     <td>
                                         <input type="text" id="dxyzm" name="dxyzm" class="text" maxlength="200" />
+                                        <input type="button" id="btn" value="发送验证码" />
+                                        <p id="notice1" class="hide">请先完成验证</p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -69,19 +79,8 @@
                                     </td>
                                 </tr>
 								<tr>
-									<th>
-										<span class="requiredField">*</span>验证码:
-									</th>
-									<td>
-										<div id="captcha1">
-											<p id="wait1" class="show">正在加载验证码......</p>
-										</div>
-									</td>
-								</tr>
-								<tr>
                                     <th>
                                         &nbsp;
-                                        <p id="notice1" class="hide">请先完成验证</p>
                                     </th>
 									<td>
                                         <input type="submit" id="submit1" class="submit" value="确 认" />

@@ -25,8 +25,11 @@ $().ready(function() {
                 required: true,
                 checkUsername:true,
                 remote: {
-                    url: "/register/check_username",
-                    cache: false
+                    url: "/register/check",
+                    cache: false,
+                    data:{
+                        "type":"username"
+                    }
                 }
             },
             password: {
@@ -41,16 +44,22 @@ $().ready(function() {
                 required: true,
                 checkEmail: true,
                 remote: {
-                    url: "/register/check_email",
-                    cache: false
+                    url: "/register/check",
+                    cache: false,
+                    data:{
+                        "type":"email"
+                    }
                 }
             },
             phone: {
                 required: true,
                 checkPhone: true,
                 remote: {
-                    url: "/register/check_phone",
-                    cache: false
+                    url: "/register/check",
+                    cache: false,
+                    data:{
+                        "type":"phone"
+                    }
                 }
             },
 

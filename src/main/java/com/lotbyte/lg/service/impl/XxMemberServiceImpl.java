@@ -45,13 +45,33 @@ import java.util.Random;
 public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMember> implements XxMemberService {
 
     /**
-     * 根据用户名查找用户是否存在
-     *
-     * @param username 用户名
+     * 校验注册信息
+     * @param str
+     * @param request
      * @return
      */
     @Override
-    public Boolean countUserByName(String username) {
+    public boolean checkUserRegister(HttpServletRequest request) {
+        Boolean b=null;
+        String type = request.getParameter("type");
+        if(type.equals("username")){
+            b = countUserByName(request);
+        }else if(type.equals("email")){
+            b = countUserByemail(request);
+        }else if(type.equals("phone")){
+            b = countUserByPhone(request);
+        }
+        return b;
+    }
+
+    /**
+     * 根据用户名查找用户是否存在
+     *
+     * @param
+     * @return
+     */
+    public Boolean countUserByName(HttpServletRequest request) {
+        String username = request.getParameter("username");
         if (StringUtils.isEmpty(username)) {
             return false;
         }
@@ -63,38 +83,38 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
     /**
      * 根据email查找用户是否存在
      *
-     * @param email 邮件
+     * @param
      * @return
      */
-    @Override
-    public Boolean countUserByemail(String email) {
+    public Boolean countUserByemail(HttpServletRequest request) {
+        String email = request.getParameter("email");
         if (StringUtils.isEmpty(email)) {
             return false;
         }
         Integer count = getBaseMapper().selectCount(new QueryWrapper<XxMember>().eq("email", email));
-        log.info(email);
         return count == 0;
     }
 
 
     /**
      * 根据手机号查找用户是否存在
-     * @param phone
+     *
+     * @param
      * @return
      */
-    @Override
-    public Boolean countUserByPhone(String phone) {
+    public Boolean countUserByPhone(HttpServletRequest request) {
+        String phone = request.getParameter("phone");
         if (StringUtils.isEmpty(phone)) {
             return false;
         }
         Integer count = getBaseMapper().selectCount(new QueryWrapper<XxMember>().eq("phone", phone));
-        log.info(count+"");
         return count == 0;
     }
 
 
     /**
      * 加载验证码
+     *
      * @param request
      * @param response
      * @return
@@ -134,6 +154,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 处理验证码/创建新用户
+     *
      * @param request
      * @param response
      * @return
@@ -141,7 +162,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
     @Override
     public ResultInfo verifyLogin(HttpServletRequest request, HttpServletResponse response) {
         //数据存放
-        ResultInfo resultInfo=null;
+        ResultInfo resultInfo = null;
         try {
             GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                     GeetestConfig.isnewfailback());
@@ -168,13 +189,10 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
                 //gt-server正常，向gt-server进行二次验证
 
                 gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, param);
-                System.out.println(gtResult);
             } else {
                 // gt-server非正常情况下，进行failback模式验证
 
-                System.out.println("failback:use your own server captcha validate");
                 gtResult = gtSdk.failbackValidateRequest(challenge, validate, seccode);
-                System.out.println(gtResult);
             }
 
 
@@ -239,6 +257,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 登录验证用户是否存在
+     *
      * @param username
      * @return
      */
@@ -254,6 +273,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 处理验证码，登录
+     *
      * @param request
      * @param response
      * @return
@@ -261,7 +281,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
     @Override
     public ResultInfo loginVerifyLogin(HttpServletRequest request, HttpServletResponse response) {
         //数据存放
-        ResultInfo resultInfo=null;
+        ResultInfo resultInfo = null;
         try {
             GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                     GeetestConfig.isnewfailback());
@@ -314,15 +334,16 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
 
     /**
-     * 找回密码
+     * 发送验证码
+     *
      * @param request
      * @param response
      * @return
      */
     @Override
-    public ResultInfo findPassword(HttpServletRequest request, HttpServletResponse response) {
+    public ResultInfo checkJY(HttpServletRequest request, HttpServletResponse response) {
         //数据存放
-        ResultInfo resultInfo=null;
+        ResultInfo resultInfo = new ResultInfo();;
         try {
             GeetestLib gtSdk = new GeetestLib(GeetestConfig.getGeetest_id(), GeetestConfig.getGeetest_key(),
                     GeetestConfig.isnewfailback());
@@ -349,7 +370,6 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
                 //gt-server正常，向gt-server进行二次验证
 
                 gtResult = gtSdk.enhencedValidateRequest(challenge, validate, seccode, param);
-                System.out.println(gtResult);
             } else {
                 // gt-server非正常情况下，进行failback模式验证
                 gtResult = gtSdk.failbackValidateRequest(challenge, validate, seccode);
@@ -357,12 +377,11 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
             if (gtResult == 1) {
                 // 验证成功
-                //调用修改密码
-                resultInfo = updatePassword(request, response);
+                resultInfo.setCode(200);
+                resultInfo.setMsg("验证成功");
             } else {
                 // 验证失败
-                resultInfo = new ResultInfo();
-                resultInfo.setCode(400);
+                resultInfo.setCode(404);
                 resultInfo.setMsg("验证失败");
             }
         } catch (Exception e) {
@@ -373,12 +392,15 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
     }
 
 
+
     /**
      * 校验验证码，修改账户密码
+     *
      * @param request
      * @param response
      */
-    private ResultInfo updatePassword(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public ResultInfo updatePassword(HttpServletRequest request, HttpServletResponse response) {
 
         //获取前台传来的参数
         String phoneNum = request.getParameter("phone");
@@ -386,21 +408,22 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
         String newPassword = request.getParameter("newPassword");
         String newRepassword = request.getParameter("newRePassword");
 
-        AssertUtil.isTrue(StringUtils.isEmpty(phoneNum) || "".equals(phoneNum),"手机号为空");
-        AssertUtil.isTrue(StringUtils.isEmpty(dxyzm) || "".equals(dxyzm),"短信验证码为空");
-        AssertUtil.isTrue(StringUtils.isEmpty(newPassword) || "".equals(newPassword),"新密码为空");
-        AssertUtil.isTrue(StringUtils.isEmpty(newRepassword) || "".equals(newRepassword),"确认新密码为空为空");
-        AssertUtil.isTrue(!newPassword.equals(newRepassword),"密码不一致");
+        AssertUtil.isTrue(StringUtils.isEmpty(phoneNum) || "".equals(phoneNum), "手机号为空");
+        AssertUtil.isTrue(StringUtils.isEmpty(dxyzm) || "".equals(dxyzm), "短信验证码为空");
+        AssertUtil.isTrue(StringUtils.isEmpty(newPassword) || "".equals(newPassword), "新密码为空");
+        AssertUtil.isTrue(StringUtils.isEmpty(newRepassword) || "".equals(newRepassword), "确认新密码为空为空");
+        AssertUtil.isTrue(!newPassword.equals(newRepassword), "密码不一致");
 
         //校验session中的短信验证码
-        ResultInfo resultInfo = checkSms(request, response,phoneNum, dxyzm, newPassword);
+        ResultInfo resultInfo = checkSms(request, response, phoneNum, dxyzm, newPassword);
 
         return resultInfo;
     }
 
 
     /**
-     * 校验短信
+     * 校验短信,修改密码
+     *
      * @param request
      * @param response
      * @param phoneNum
@@ -414,28 +437,28 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
         Long time = (Long) request.getSession().getAttribute(sessionCode);
         long minute = new Date().getTime();
 
-        if(minute-time<300000){
-            if(sessionCode.equals(dxyzm)){
+        if (minute - time < 300000) {
+            if (sessionCode.equals(dxyzm)) {
                 //修改密码
                 XxMember member = new XxMember();
                 member.setPassword(Md5Util.encode(newPassword));
                 //修改条件
                 UpdateWrapper<XxMember> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("phone",phoneNum);
+                updateWrapper.eq("phone", phoneNum);
                 //执行sql
                 int update = getBaseMapper().update(member, updateWrapper);
-                if(update>0){
+                if (update > 0) {
                     resultInfo.setCode(200);
                     resultInfo.setMsg("密码修改成功");
-                }else {
+                } else {
                     resultInfo.setCode(404);
                     resultInfo.setMsg("密码修改失败");
                 }
-            }else{
+            } else {
                 resultInfo.setCode(404);
                 resultInfo.setMsg("验证码不正确");
             }
-        }else {
+        } else {
             resultInfo.setCode(404);
             resultInfo.setMsg("验证码超时");
         }
@@ -446,25 +469,21 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 发送短信验证码
+     *
      * @param phoneNum
      * @return
      */
     @Override
-    public ResultInfo sendMsg(HttpServletRequest httpServletRequest,String phoneNum) {
+    public ResultInfo sendMsg(HttpServletRequest httpServletRequest, String phoneNum) {
         //返回数据
         ResultInfo resultInfo = new ResultInfo();
         try {
             //自动生成6位数验证码c
             String smsCode = String.valueOf(new Random().nextInt(899999) + 100000);
-            httpServletRequest.getSession().setAttribute(phoneNum,smsCode);
+            httpServletRequest.getSession().setAttribute(phoneNum, smsCode);
             //设置当前存放时间，以便在找回时判定是否过期
             long time = new Date().getTime();
-            httpServletRequest.getSession().setAttribute(smsCode,time);
-
-            String attribute1 = (String) httpServletRequest.getSession().getAttribute(phoneNum);
-            Long attribute2 = (Long) httpServletRequest.getSession().getAttribute(attribute1);
-            log.info(attribute1);
-            log.info(attribute2+"");
+            httpServletRequest.getSession().setAttribute(smsCode, time);
 
             //调用阿里通信接口
             //设置超时时间-可自行调整
@@ -492,21 +511,21 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
             request.setTemplateCode("SMS_171358389");
             //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
             //友情提示:如果JSON中需要带换行符,请参照标准的JSON协议对换行符的要求,比如短信内容中包含\r\n的情况在JSON中需要表示成\\r\\n,否则会导致JSON在服务端解析失败
-            request.setTemplateParam("{\"code\":\""+smsCode+"\"}");
+            request.setTemplateParam("{\"code\":\"" + smsCode + "\"}");
             //可选-上行短信扩展码(扩展码字段控制在7位或以下，无特殊需求用户请忽略此字段)
             //request.setSmsUpExtendCode("90997");
             //可选:outId为提供给业务方扩展字段,最终在短信回执消息中将此值带回给调用者
             request.setOutId("qf");
             //请求失败这里会抛ClientException异常
             SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-            if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+            if (sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
                 //请求成功
                 //真实应用的时候验证码在服务端有记录
                 //客户端由客户来输入
                 //客户输入的验证码和服务端做匹配
                 resultInfo.setCode(200);
                 resultInfo.setMsg("短信发送成功");
-            }else {
+            } else {
                 resultInfo.setCode(404);
                 resultInfo.setMsg("短信发送失败");
             }
@@ -520,6 +539,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 找回密码（判断手机号是否存在）
+     *
      * @param phone
      * @return
      */
@@ -529,7 +549,6 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
             return false;
         }
         Integer count = getBaseMapper().selectCount(new QueryWrapper<XxMember>().eq("phone", phone));
-        log.info(count+"");
         return count > 0;
 
     }
@@ -537,6 +556,7 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
 
     /**
      * 登录
+     *
      * @param request
      * @param response
      */
@@ -547,18 +567,18 @@ public class XxMemberServiceImpl extends BaseServiceImpl<XxMemberMapper, XxMembe
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        AssertUtil.isTrue(StringUtils.isEmpty(username) || "".equals(username),"用户名为空");
-        AssertUtil.isTrue(StringUtils.isEmpty(password) || "".equals(password),"密码为空");
+        AssertUtil.isTrue(StringUtils.isEmpty(username) || "".equals(username), "用户名为空");
+        AssertUtil.isTrue(StringUtils.isEmpty(password) || "".equals(password), "密码为空");
 
         Map<String, String> map = new HashMap<>();
-        map.put("username",username);
-        map.put("password",Md5Util.encode(password));
+        map.put("username", username);
+        map.put("password", Md5Util.encode(password));
         XxMember member = getBaseMapper().selectOne(new QueryWrapper<XxMember>().allEq(map));
-        if(member==null){
+        if (member == null) {
             resultInfo.setCode(404);
             resultInfo.setMsg("密码错误");
-        }else {
-            request.getSession().setAttribute("xxmember",member);
+        } else {
+            request.getSession().setAttribute("xxmember", member);
             resultInfo.setCode(200);
             resultInfo.setMsg("登录成功");
         }
